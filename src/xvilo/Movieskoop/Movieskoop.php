@@ -22,7 +22,7 @@ class Movieskoop
         preg_match_all('/<option value="(\/.*?)">(.*?)<\/option>/', $pageHtml, $matches, PREG_PATTERN_ORDER);
 
         // Check if URL count and Title count is same.
-        if(count($matches[1]) === count($matches[2])) {
+        if (count($matches[1]) === count($matches[2])) {
             // Loop through all the matches
             for ($x = 0; $x <= count($matches[1]) - 1; $x++) {
                 // Add the matches to our movies list.

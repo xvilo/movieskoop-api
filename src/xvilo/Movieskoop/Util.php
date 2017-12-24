@@ -16,11 +16,10 @@ class Util
      */
     public static function getPageBodyFromUrl(string $url)
     {
-
         $client = self::getGuzzleClient();
         $res = $client->request('GET', $url);
 
-        if($res->getStatusCode()) {
+        if ($res->getStatusCode()) {
             return $res->getBody();
         } else {
             die('OOPS! ' . $res->getStatusCode());
@@ -32,7 +31,7 @@ class Util
      */
     public static function getGuzzleClient() : Guzzle
     {
-        if(self::$guzzleClient === null) {
+        if (self::$guzzleClient === null) {
             self::$guzzleClient = new Guzzle();
         }
 
