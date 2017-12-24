@@ -2,17 +2,21 @@
     "name": "xvilo/movieskoop-api",
     "description": "API for Movieskoop Emmeloord",
     "type": "library",
+    "version" : "1.0.0",
+    "license": "Creative Commons Attribution",
+    "authors": [
+        {
+            "name": "Sem Schilder",
+            "email": "sem@tropical.email",
+            "homepage": "https://sem.design",
+            "role": "Developer"
+        }
+    ],
     "autoload": {
         "psr-0" : {
             "xvilo\\Movieskoop" : "src"
         }
     },
-    "authors": [
-        {
-            "name": "Sem Schilder",
-            "email": "sem@tropical.email"
-        }
-    ],
     "require": {
         "php": ">=7.1",
         "guzzlehttp/guzzle": "^6.3"
