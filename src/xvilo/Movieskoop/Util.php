@@ -9,6 +9,21 @@ class Util
     /** @var Guzzle */
     private static $guzzleClient;
 
+    /** @var array */
+    private static $months = [
+        'jan' => 'January',
+        'feb' => 'Februari',
+        'mrt' => 'March',
+        'apr' => 'April',
+        'jun' => 'June',
+        'jul' => 'July',
+        'aug' => 'August',
+        'sep' => 'September',
+        'okt' => 'October',
+        'nov' => 'November',
+        'dec' => 'December'
+    ];
+
     /**
      * @param $url
      * @return \Psr\Http\Message\StreamInterface
@@ -22,7 +37,7 @@ class Util
         if ($res->getStatusCode()) {
             return $res->getBody();
         } else {
-            die('OOPS! ' . $res->getStatusCode());
+            throw new \Exception('OOPS! ' . $res->getStatusCode());
         }
     }
 
@@ -36,5 +51,19 @@ class Util
         }
 
         return self::$guzzleClient;
+    }
+
+    /**
+     * @param string $month
+     * @return string
+     * @throws \Exception
+     */
+    public static function convertDutchShortMonthToFullEnglishMonth(string $month) : string
+    {
+        if (isset(self::$months[$month])) {
+            return self::$months[$month];
+        } else {
+            throw new \Exception("No matching English month found for '{$month}'");
+        }
     }
 }

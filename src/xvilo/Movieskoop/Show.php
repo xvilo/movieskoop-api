@@ -13,20 +13,10 @@ class Show
     /** @var int */
     private $room = '';
 
-    private $months = [
-        'jan' => 'January',
-        'feb' => 'Februari',
-        'mrt' => 'March',
-        'apr' => 'April',
-        'jun' => 'June',
-        'jul' => 'July',
-        'aug' => 'August',
-        'sep' => 'September',
-        'okt' => 'October',
-        'nov' => 'November',
-        'dec' => 'December'
-    ];
+    /** @var array */
+    private $pricing;
 
+    /** @var array */
     private $_debug_rawInput = [];
 
     /**
@@ -71,19 +61,10 @@ class Show
     {
         preg_match('/([0-9]{1,2}) ([a-z]{3}) - ([0-9]{2}:[0-9]{2})/s', $date, $matches);
 
-        $fullEnglishMonth = $this->convertDutchShortMonthToFullEnglishMonth($matches[2]);
+        $fullEnglishMonth = Util::convertDutchShortMonthToFullEnglishMonth($matches[2]);
         $composedDateTime = "{$fullEnglishMonth} {$matches[1]} {$matches[3]}";
 
         return strtotime($composedDateTime);
-    }
-
-    public function convertDutchShortMonthToFullEnglishMonth(string $month) : string
-    {
-        if (isset($this->months[$month])) {
-            return $this->months[$month];
-        } else {
-            throw new \Exception("No matching English month found for '{$month}'");
-        }
     }
 
     /**
@@ -142,5 +123,21 @@ class Show
     public function getRoom() : int
     {
         return $this->room;
+    }
+
+    /**
+     * @param ShowPricing $pricing
+     */
+    public function setPricing(ShowPricing $pricing)
+    {
+        $this->pricing = $pricing;
+    }
+
+    /**
+     * @return ShowPricing
+     */
+    public function getPricing() : ShowPricing
+    {
+        return $this->pricing;
     }
 }

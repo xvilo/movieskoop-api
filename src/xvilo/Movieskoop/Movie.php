@@ -100,7 +100,7 @@ class Movie
      * @param string $pageBody
      * @return array
      */
-    private function parseShowsFormBodyContents(string $pageBody): array
+    private function parseShowsFormBodyContents(string $pageBody) : array
     {
         preg_match_all('/value="([0-9]{1,})">([^(]+) \((.*?)\)<\/option>/s', $pageBody, $matches);
 
@@ -123,13 +123,11 @@ class Movie
      */
     private function addShowPricingToShows(string $pageBody)
     {
-        foreach($this->getShows() as $show) {
+        foreach ($this->getShows() as $show) {
             $showId = $show->getId();
             $showPricing = new ShowPricing($showId, $pageBody);
             $show->setPricing($showPricing);
-            die(var_dump($show));
         }
-
     }
 
     /**

@@ -2,20 +2,45 @@
 
 namespace xvilo\Movieskoop;
 
-use GuzzleHttp\Client as Guzzle;
-
 class Movieskoop
 {
-    public function __construct()
-    {
-    }
-
-    public function getMovies()
+    /**
+     * @return array
+     */
+    public function getMoviesListAsArray() : array
     {
         return $this->getRawMoviesHtml();
     }
 
-    private function getRawMoviesHtml()
+    /**
+     * @return array
+     */
+    public function getMovies() : array
+    {
+        $movies = $this->getMoviesListAsArray();
+        $movieObjects = [];
+
+        foreach ($movies as $movie) {
+            array_push($movieObjects, $this->getMovie($movie['id']));
+        }
+
+        return $movieObjects;
+    }
+
+    /**
+     * @param string $id
+     * @return Movie
+     */
+    public function getMovie(string $id) : Movie
+    {
+        return new Movie($id);
+    }
+
+
+    /**
+     * @return array
+     */
+    private function getRawMoviesHtml() : array
     {
         $movies = [];
         $pageHtml = Util::getPageBodyFromUrl('http://www.movieskoop.nl');

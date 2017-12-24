@@ -7,7 +7,6 @@ include 'vendor/autoload.php';
 
 $movieskoop = new Movieskoop();
 
-$allMovies = $movieskoop->getMovies();
+$allMovies = $movieskoop->getMovie('/movies/1525/17/jumanji_welcome_to_the_jungle_3d');
 
-$movie = new Movie($allMovies[1]['id']);
-die(var_dump($movie));
+die(var_dump($allMovies));
