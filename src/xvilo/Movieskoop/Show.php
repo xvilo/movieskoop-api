@@ -39,8 +39,9 @@ class Show
     public function __construct(int $id, string $date, string $room)
     {
         $this->_debug_rawInput = [$id, $date, $room];
-        if($id === '' or $date === '' or $room === '' )
+        if ($id === '' or $date === '' or $room === '') {
             throw new \Exception('Oops. You need to fill in all of our parameters. None of them maybe empty');
+        }
 
         // Parse all values that are 'off'
         $parsedRoom = $this->parseRoom($room);
@@ -76,9 +77,9 @@ class Show
         return strtotime($composedDateTime);
     }
 
-    function convertDutchShortMonthToFullEnglishMonth(string $month) : string
+    public function convertDutchShortMonthToFullEnglishMonth(string $month) : string
     {
-        if(isset($this->months[$month])) {
+        if (isset($this->months[$month])) {
             return $this->months[$month];
         } else {
             throw new \Exception("No matching English month found for '{$month}'");
