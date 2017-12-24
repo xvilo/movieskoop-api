@@ -1,0 +1,12 @@
+{
+    "name": "xvilo/movieskoop-api",
+    "description": "API for Movieskoop Emmeloord",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Sem Schilder",
+            "email": "sem@tropical.email"
+        }
+    ],
+    "require": {}
+}
