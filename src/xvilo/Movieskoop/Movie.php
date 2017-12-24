@@ -44,13 +44,16 @@ class Movie
         $pageBodyStream   = Util::getPageBodyFromUrl($this->getMovieUrl());
         $pageBodyContents = $pageBodyStream->getContents();
         // Extract Title
-        $this->setTitleFromBodyContents($pageBodyContents);
+        $title = $this->getTitleFromBodyContents($pageBodyContents);
+        $this->setTitle($title);
 
         // Extract Description
-        $this->setDescriptionFromBodyContents($pageBodyContents);
+        $description = $this->getDescriptionFromBodyContents($pageBodyContents);
+        $this->setDescription($description);
 
         // Set Additional Data
-        $this->setAdditionalDataFromBodyContents($pageBodyContents);
+        $additionalData = $this->getAdditionalDataFromBodyContents($pageBodyContents);
+        $this->setAdditionalData($additionalData);
 
         // Parse and set shows for movie
         $shows = $this->parseShowsFormBodyContents($pageBodyContents);
@@ -62,30 +65,30 @@ class Movie
      *
      * @param string $pageBody
      */
-    private function setTitleFromBodyContents(string $pageBody)
+    private function getTitleFromBodyContents(string $pageBody)
     {
         preg_match('/<h2>([^<]+)/', $pageBody, $matches);
-        $this->setTitle($matches[1]);
+        return $matches[1];
     }
 
     /**
      * Sets movie description from Movieskoop webpage html data
      * @param string $pageBody
      */
-    private function setDescriptionFromBodyContents(string $pageBody)
+    private function getDescriptionFromBodyContents(string $pageBody)
     {
         preg_match('/Omschrijving:<\/strong><br \/>([^<]+)/s', $pageBody, $matches);
-        $this->setDescription($matches[1]);
+        return $matches[1];
     }
 
     /**
      * Sets movie additionalData from Movieskoop webpage html data
      * @param string $pageBody
      */
-    private function setAdditionalDataFromBodyContents(string $pageBody)
+    private function getAdditionalDataFromBodyContents(string $pageBody)
     {
         preg_match('/class="additionalinfo">(.*?<\/table>)/s', $pageBody, $matches);
-        $this->setAdditionalData($matches[1]);
+        return $matches[1];
     }
 
     /**
