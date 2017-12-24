@@ -2,6 +2,8 @@
 
 namespace xvilo\Movieskoop;
 
+use xvilo\Movieskoop\Show as Show;
+
 class Movie
 {
     /** @var string */
@@ -18,6 +20,9 @@ class Movie
 
     /** @var string */
     private $additionalData = '';
+
+    /** @var array  */
+    private $shows = [];
 
     /**
      * Movie constructor.
@@ -48,7 +53,8 @@ class Movie
         $this->setAdditionalDataFromBodyContents($pageBodyContents);
 
         // Parse and set shows for movie
-        $this->parseAndSetShowsFormBodyContents($pageBodyContents);
+        $shows = $this->parseShowsFormBodyContents($pageBodyContents);
+        $this->setShows($shows);
     }
 
     /**
@@ -85,9 +91,24 @@ class Movie
     /**
      * parses and sets shows for movie from Movieskoop webpage html data
      * @param string $pageBody
+     * @return array
      */
-    private function parseAndSetShowsFormBodyContents(string $pageBody)
+    private function parseShowsFormBodyContents(string $pageBody) : array
     {
+        preg_match_all('/value="([0-9]{1,})">([^(]+) \((.*?)\)<\/option>/s', $pageBody, $matches);
+
+        $allShows      = [];
+        $totalMatches  = count($matches[0]);
+        $showIdArray   = $matches[1];
+        $showDateArray = $matches[2];
+        $showRoomArray = $matches[3];
+
+        for ($x = 0; $x <= $totalMatches - 1; $x++) {
+            $show = new Show((int)$showIdArray[$x], $showDateArray[$x], $showRoomArray[$x]);
+            array_push($allShows, $show);
+        }
+
+        return $allShows;
     }
 
     /**
@@ -176,5 +197,21 @@ class Movie
     public function getFullBodyHtml()
     {
         return $this->getDescription() . $this->getAdditionalData();
+    }
+
+    /**
+     * @param array $shows
+     */
+    private function setShows(array $shows)
+    {
+        $this->shows = $shows;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShows() : array
+    {
+        return $this->shows;
     }
 }

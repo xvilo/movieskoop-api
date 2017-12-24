@@ -27,6 +27,8 @@ class Show
         'dec' => 'December'
     ];
 
+    private $_debug_rawInput = [];
+
     /**
      * Show constructor.
      * @param int $id
@@ -36,6 +38,7 @@ class Show
      */
     public function __construct(int $id, string $date, string $room)
     {
+        $this->_debug_rawInput = [$id, $date, $room];
         if($id === '' or $date === '' or $room === '' )
             throw new \Exception('Oops. You need to fill in all of our parameters. None of them maybe empty');
 
@@ -65,12 +68,21 @@ class Show
      */
     private function parseDate(string $date) : int
     {
-        preg_match('/([0-9]{2}) ([a-z]{3}) - ([0-9]{2}:[0-9]{2})/s', $date, $matches);
+        preg_match('/([0-9]{1,2}) ([a-z]{3}) - ([0-9]{2}:[0-9]{2})/s', $date, $matches);
 
-        $fullEnglishMonth = $this->months[$matches[2]];
+        $fullEnglishMonth = $this->convertDutchShortMonthToFullEnglishMonth($matches[2]);
         $composedDateTime = "{$fullEnglishMonth} {$matches[1]} {$matches[3]}";
 
         return strtotime($composedDateTime);
+    }
+
+    function convertDutchShortMonthToFullEnglishMonth(string $month) : string
+    {
+        if(isset($this->months[$month])) {
+            return $this->months[$month];
+        } else {
+            throw new \Exception("No matching English month found for '{$month}'");
+        }
     }
 
     /**
