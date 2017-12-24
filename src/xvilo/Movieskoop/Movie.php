@@ -3,6 +3,7 @@
 namespace xvilo\Movieskoop;
 
 use xvilo\Movieskoop\Show as Show;
+use xvilo\Movieskoop\ShowPricing as ShowPricing;
 
 class Movie
 {
@@ -21,7 +22,7 @@ class Movie
     /** @var string */
     private $additionalData = '';
 
-    /** @var array  */
+    /** @var array */
     private $shows = [];
 
     /**
@@ -41,7 +42,7 @@ class Movie
      */
     private function populateObject()
     {
-        $pageBodyStream   = Util::getPageBodyFromUrl($this->getMovieUrl());
+        $pageBodyStream = Util::getPageBodyFromUrl($this->getMovieUrl());
         $pageBodyContents = $pageBodyStream->getContents();
         // Extract Title
         $title = $this->getTitleFromBodyContents($pageBodyContents);
@@ -58,6 +59,9 @@ class Movie
         // Parse and set shows for movie
         $shows = $this->parseShowsFormBodyContents($pageBodyContents);
         $this->setShows($shows);
+
+        // Add ShowPricing to Show objects
+        $this->addShowPricingToShows($pageBodyContents);
     }
 
     /**
@@ -96,13 +100,13 @@ class Movie
      * @param string $pageBody
      * @return array
      */
-    private function parseShowsFormBodyContents(string $pageBody) : array
+    private function parseShowsFormBodyContents(string $pageBody): array
     {
         preg_match_all('/value="([0-9]{1,})">([^(]+) \((.*?)\)<\/option>/s', $pageBody, $matches);
 
-        $allShows      = [];
-        $totalMatches  = count($matches[0]);
-        $showIdArray   = $matches[1];
+        $allShows = [];
+        $totalMatches = count($matches[0]);
+        $showIdArray = $matches[1];
         $showDateArray = $matches[2];
         $showRoomArray = $matches[3];
 
@@ -112,6 +116,20 @@ class Movie
         }
 
         return $allShows;
+    }
+
+    /**
+     * @param string $pageBody
+     */
+    private function addShowPricingToShows(string $pageBody)
+    {
+        foreach($this->getShows() as $show) {
+            $showId = $show->getId();
+            $showPricing = new ShowPricing($showId, $pageBody);
+            $show->setPricing($showPricing);
+            die(var_dump($show));
+        }
+
     }
 
     /**

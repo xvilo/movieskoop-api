@@ -99,7 +99,7 @@ class Show
      */
     public function getId() : int
     {
-        return $this->int;
+        return $this->id;
     }
 
     /**
