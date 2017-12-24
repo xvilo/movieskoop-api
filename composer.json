@@ -2,7 +2,7 @@
     "name": "xvilo/movieskoop-api",
     "description": "API for Movieskoop Emmeloord",
     "type": "library",
-    "version" : "1.0.0",
+    "version" : "1.0.1",
     "license": "Creative Commons Attribution",
     "authors": [
         {

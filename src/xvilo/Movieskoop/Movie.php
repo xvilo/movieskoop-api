@@ -4,8 +4,9 @@ namespace xvilo\Movieskoop;
 
 use xvilo\Movieskoop\Show as Show;
 use xvilo\Movieskoop\ShowPricing as ShowPricing;
+use JsonSerializable;
 
-class Movie
+class Movie implements JsonSerializable
 {
     /** @var string */
     private $id = '';
@@ -125,7 +126,7 @@ class Movie
     {
         foreach ($this->getShows() as $show) {
             $showId = $show->getId();
-            $showPricing = new ShowPricing($showId, $pageBody);
+            $showPricing = new ShowPricing($showId, $pageBody, $this);
             $show->setPricing($showPricing);
         }
     }
@@ -232,5 +233,20 @@ class Movie
     public function getShows() : array
     {
         return $this->shows;
+    }
+
+    /**
+     * Ability to JSONify this class.
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        return [
+            'movieUrl' => $this->getMovieUrl(),
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'additionalData' => $this->getAdditionalData(),
+            'shows' => $this->getShows(),
+        ];
     }
 }

@@ -2,7 +2,9 @@
 
 namespace xvilo\Movieskoop;
 
-class Show
+use JsonSerializable;
+
+class Show implements JsonSerializable
 {
     /** @var int */
     private $id = 0;
@@ -139,5 +141,20 @@ class Show
     public function getPricing() : ShowPricing
     {
         return $this->pricing;
+    }
+
+    /**
+     * Ability to JSONify this class.
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        return [
+            'id' => $this->getId(),
+            'dateTime' => $this->getDateTime(),
+            'dateTimeUnixEpoch' => $this->getDateTimeUnixEpoch(),
+            'pricing' => $this->getPricing(),
+            'room' => $this->getRoom(),
+        ];
     }
 }

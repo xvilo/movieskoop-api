@@ -2,7 +2,9 @@
 
 namespace xvilo\Movieskoop;
 
-class ShowPricing
+use JsonSerializable;
+
+class ShowPricing implements JsonSerializable
 {
     /** @var int */
     private $forShowId = 0;
@@ -27,7 +29,7 @@ class ShowPricing
         $this->setForShowId($showId);
 
         // Start populating class and data extraction.
-        $this->populateObject($pageBody);
+        $this->populateobject($pageBody);
     }
 
     private function populateObject(string $pageBody)
@@ -43,12 +45,17 @@ class ShowPricing
 
     /**
      * @param string $pageBody
+     * @throws \Exception;
      * @return array
      */
     private function getPricingTiersFromPageBody(string $pageBody) : array
     {
         // Get all possible tiers
         preg_match('/class="rankselect" name="rankid\[' . $this->getForShowId() . '\]">(.*?)<\/select>/', $pageBody, $matches);
+
+        if (!isset($matches[1])) {
+            throw new \Exception("Couldn't get tiers for");
+        }
 
         // Match every tier
         preg_match_all('/value="([0-9]{1,})">(.*?)<\/option>/', $matches[1], $matches, PREG_SET_ORDER);
@@ -83,12 +90,17 @@ class ShowPricing
      * @param int $tierId
      * @param int $showId
      * @param string $pageBody
+     * @throws \Exception;
      * @return float
      */
     private function getTierPricing(int $tierId, int $showId, string $pageBody) : float
     {
         // Get pricing html for tier and show from pageBody html
         preg_match('/<div class="showslist show_' . $showId . '">(.*?)<div class="clearfix"><\/div><\/div><\/div>/s', $pageBody, $matches);
+
+        if (!isset($matches[1])) {
+            throw new \Exception("Couldn't get tier pricing; tier {$tierId}, show {$showId}");
+        }
 
         // Match price for tier from pricing data
         preg_match('/class="ticketrow rank_' . $tierId . '">.*? &euro; ([0-9]{1,},[0-9]{1,2})/s', $matches[1], $matches);
@@ -142,5 +154,18 @@ class ShowPricing
     public function getPricing() : array
     {
         return $this->pricing;
+    }
+
+    /**
+     * Ability to JSONify this class.
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        return [
+            'pricing' => $this->getForShowId(),
+            'forShowId' => $this->getPricingTiers(),
+            'getPricingPerTier' => $this->getPricing(),
+        ];
     }
 }
